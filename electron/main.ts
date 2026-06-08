@@ -28,12 +28,12 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: false,
     },
-    icon: path.join(__dirname, "..", "assets", "icon.png"),
+    icon: app.isPackaged ? path.join(process.resourcesPath, "icon.png") : path.join(__dirname, "..", "assets", "icon.png"),
   });
 
   mainWindow.setAlwaysOnTop(true, "screen-saver");
   mainWindow.setVisibleOnAllWorkspaces(true);
-  mainWindow.loadFile(path.join(__dirname, "..", "renderer", "index.html"));
+  mainWindow.loadFile(path.join(__dirname, "index.html"));
 
   if (process.argv.includes("--dev")) {
     mainWindow.webContents.openDevTools({ mode: "detach" });

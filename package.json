@@ -6,7 +6,7 @@
   "scripts": {
     "build:main": "esbuild electron/main.ts --bundle --platform=node --target=node20 --external:electron --outfile=dist/main.js --format=cjs",
     "build:preload": "esbuild electron/preload.ts --bundle --platform=node --target=node20 --external:electron --outfile=dist/preload.js --format=cjs",
-    "build:renderer": "esbuild renderer/app.ts --bundle --platform=browser --target=chrome120 --outfile=dist/renderer.js --format=iife",
+    "build:renderer": "esbuild renderer/app.ts --bundle --platform=browser --target=chrome120 --outfile=dist/renderer.js --format=iife && node -e \"require('fs').copyFileSync('renderer/index.html','dist/index.html');require('fs').copyFileSync('renderer/styles.css','dist/styles.css')\"",
     "build": "npm run build:main && npm run build:preload && npm run build:renderer",
     "start": "npm run build && electron .",
     "dev": "npm run build && electron .",
@@ -25,38 +25,34 @@
       "output": "release"
     },
     "files": [
-      "dist/**/*",
-      "assets/icon.png",
-      "assets/icon.ico"
+      "dist/**/*"
     ],
+    "extraResources": [
+      {
+        "from": "assets/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "asar": true,
+    "asarUnpack": [],
     "win": {
       "icon": "assets/icon.ico",
       "target": [
         {
-          "target": "nsis",
+          "target": "portable",
           "arch": [
             "x64"
           ]
         }
       ]
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "shortcutName": "Chorvy Crypto"
+    "portable": {
+      "artifactName": "ChorvyCrypto-${version}.exe"
     },
-    "mac": {
-      "icon": "assets/icon.png",
-      "target": [
-        "dmg"
-      ]
-    },
-    "linux": {
-      "icon": "assets/icon.png",
-      "target": [
-        "AppImage"
-      ]
-    }
+    "compression": "maximum",
+    "electronLanguages": [
+      "zh-CN",
+      "en-US"
+    ]
   }
 }
