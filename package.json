@@ -1,0 +1,62 @@
+{
+  "name": "chorvy-crypto",
+  "version": "1.0.0",
+  "description": "轻量级桌面加解密工具 - 支持拖入图片解密/加密，透明悬浮窗置顶",
+  "main": "dist/main.js",
+  "scripts": {
+    "build:main": "esbuild electron/main.ts --bundle --platform=node --target=node20 --external:electron --outfile=dist/main.js --format=cjs",
+    "build:preload": "esbuild electron/preload.ts --bundle --platform=node --target=node20 --external:electron --outfile=dist/preload.js --format=cjs",
+    "build:renderer": "esbuild renderer/app.ts --bundle --platform=browser --target=chrome120 --outfile=dist/renderer.js --format=iife",
+    "build": "npm run build:main && npm run build:preload && npm run build:renderer",
+    "start": "npm run build && electron .",
+    "dev": "npm run build && electron .",
+    "dist": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.2",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.0"
+  },
+  "build": {
+    "appId": "com.chorvy.crypto",
+    "productName": "Chorvy Crypto",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "assets/icon.png",
+      "assets/icon.ico"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Chorvy Crypto"
+    },
+    "mac": {
+      "icon": "assets/icon.png",
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "target": [
+        "AppImage"
+      ]
+    }
+  }
+}
